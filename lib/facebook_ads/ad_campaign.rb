@@ -60,7 +60,7 @@ module FacebookAds
       AdSet.paginate("/#{id}/adsets", query: { effective_status: effective_status, limit: limit })
     end
 
-    def create_ad_set(name:, promoted_object: {}, targeting:, daily_budget: nil, lifetime_budget: nil, start_time: nil, end_time: nil, optimization_goal:, billing_event: 'IMPRESSIONS', status: 'ACTIVE', bid_strategy: nil, bid_amount: nil, access_token: nil)
+    def create_ad_set(name:, promoted_object: {}, targeting:, daily_budget: nil, lifetime_budget: nil, start_time: nil, end_time: nil, optimization_goal:, billing_event: 'IMPRESSIONS', status: 'ACTIVE', bid_strategy: nil, bid_amount: nil, access_token: nil, pacing_type: nil)
       raise Exception, "Optimization goal must be one of: #{AdSet::OPTIMIZATION_GOALS.join(', ')}" unless AdSet::OPTIMIZATION_GOALS.include?(optimization_goal)
       raise Exception, "Billing event must be one of: #{AdSet::BILLING_EVENTS.join(', ')}" unless AdSet::BILLING_EVENTS.include?(billing_event)
       raise Exception, "Bid strategy must be one of: #{AdSet::BID_STRATEGIES.join(', ')}" unless AdSet::BID_STRATEGIES.include?(bid_strategy)
@@ -83,7 +83,8 @@ module FacebookAds
         bid_strategy: bid_strategy,
         bid_amount: bid_amount,
         start_time: start_time,
-        end_time: end_time
+        end_time: end_time,
+        pacing_type: pacing_type
       }
 
       if daily_budget && lifetime_budget
