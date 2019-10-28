@@ -17,7 +17,7 @@ gem install facebook_ads
 Or, add the following to your Gemfile:
 
 ```ruby
-gem 'facebook_ads', '~> 0.1'
+gem 'facebook_ads', '~> 0.6'
 ```
 
 ## Permissions
@@ -36,10 +36,10 @@ FacebookAds.app_secret = '[YOUR_APP_SECRET]'
 
 ## API Version
 
-This gem currently uses v2.9 of the Marketing API (2.10 is released as of 7/18/2017). You can change the version as desired with the following:
+This gem currently defaults v3.2 of the Marketing API. You can change the version as desired with the following:
 
 ```ruby
-FacebookAds.base_uri = 'https://graph.facebook.com/v2.10'
+FacebookAds.base_uri = 'https://graph.facebook.com/[desired-version-here]'
 ```
 
 ## Console
@@ -337,6 +337,25 @@ The list of fields that can be updated is [here](https://developers.facebook.com
 Destroy an ad set:
 ```ruby
 ad_set.destroy
+```
+
+___
+
+### [Ad Set Activities](https://developers.facebook.com/docs/marketing-api/reference/ad-activity) (Fetch)
+
+You interact with activities via an ad set:
+```ruby
+ad_set = account.ad_sets(effective_status: nil).first
+```
+
+Fetch all activities in last 24 hours for an ad set:
+```ruby
+activities = ad_set.activities
+```
+
+Fetch all activities in last 48 hours for an ad set:
+```ruby
+activities = ad_set.activities(from: 2.days.ago, to: Date.today)
 ```
 
 ___

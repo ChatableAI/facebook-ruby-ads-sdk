@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FacebookAds
-  # https://developers.facebook.com/docs/marketing-api/reference/ad-account/adsets
+  # https://developers.facebook.com/docs/marketing-api/reference/ad-campaign
   class AdSet < Base
     FIELDS = %w[
       id
@@ -21,6 +21,9 @@ module FacebookAds
       lifetime_budget
       promoted_object
       targeting
+      attribution_spec
+      start_time
+      end_time
       created_time
       updated_time
     ].freeze
@@ -108,6 +111,11 @@ module FacebookAds
       }.reject { |_key, value| value.nil? || (value.respond_to?(:empty?) && value.empty?) }
 
       AdInsight.paginate("/#{id}/insights", query: query)
+    end
+
+    def activities(from: Date.today.beginning_of_day, to: Date.today.end_of_day)
+      query = { since: from, until: to }
+      AdSetActivity.get("/#{id}/activities", query: query, objectify: true)
     end
   end
 end
