@@ -17,6 +17,14 @@ module FacebookAds
       stop_time
       updated_time spend_cap
       budget_remaining daily_budget lifetime_budget
+      special_ad_category
+    ].freeze
+
+    SPECIAL_AD_CATEGORIES = %w[
+      NONE
+      EMPLOYMENT
+      CREDIT
+      HOUSING
     ].freeze
 
     STATUSES = %w[
