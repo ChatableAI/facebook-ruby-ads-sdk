@@ -29,10 +29,11 @@ module FacebookAds
       AdCampaign.paginate("/#{id}/campaigns", query: { effective_status: effective_status, limit: limit })
     end
 
-    def create_ad_campaign(name:, objective:, status: 'ACTIVE')
+    def create_ad_campaign(name:, objective:, status: 'ACTIVE', special_ad_category: 'NONE')
       raise Exception, "Objective must be one of: #{AdCampaign::OBJECTIVES.join(', ')}" unless AdCampaign::OBJECTIVES.include?(objective)
       raise Exception, "Status must be one of: #{AdCampaign::STATUSES.join(', ')}" unless AdCampaign::STATUSES.include?(status)
-      query = { name: name, objective: objective, status: status }
+      raise Exception, "Special ad category must be one of: #{AdCampaign::SPECIAL_AD_CATEGORIES.join(', ')}" unless AdCampaign::SPECIAL_AD_CATEGORIES.include?(special_ad_category)
+      query = { name: name, objective: objective, status: status, special_ad_category: special_ad_category }
       result = AdCampaign.post("/#{id}/campaigns", query: query)
       AdCampaign.find(result['id'])
     end
