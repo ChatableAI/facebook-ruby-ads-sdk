@@ -6,9 +6,10 @@ module FacebookAds
   class AdCreative < Base
     FIELDS               = %w[id name object_story_id object_story_spec object_type thumbnail_url product_set_id url_tags status].freeze
     CALL_TO_ACTION_TYPES = %w[SHOP_NOW INSTALL_MOBILE_APP USE_MOBILE_APP SIGN_UP DOWNLOAD BUY_NOW NO_BUTTON].freeze
+    ENROLL_STATUSES      = %w[OPT_IN OPT_OUT].freeze
 
     class << self
-      def photo(name:, page_id:, instagram_actor_id: nil, message:, link:, app_link: nil, link_title:, image_hash:, call_to_action_type:, link_description: nil)
+      def photo(name:, page_id:, message:, link:, link_title:, image_hash:, call_to_action_type:, instagram_actor_id: nil, app_link: nil, link_description: nil, enroll_status: nil)
         object_story_spec = {
           'page_id' => page_id, # 300664329976860
           'instagram_actor_id' => instagram_actor_id, # 503391023081924
@@ -31,12 +32,13 @@ module FacebookAds
 
         {
           name: name,
-          object_story_spec: object_story_spec.to_json
-        }
+          object_story_spec: object_story_spec.to_json,
+          degrees_of_freedom_spec: degrees_of_freedom_spec(enroll_status)
+        }.compact
       end
 
       # https://developers.facebook.com/docs/marketing-api/guides/videoads
-      def carousel(name:, page_id:, instagram_actor_id: nil, link:, app_link: nil, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:)
+      def carousel(name:, page_id:, link:, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:, instagram_actor_id: nil, app_link: nil)
         object_story_spec = {
           'page_id' => page_id, # 300664329976860
           'instagram_actor_id' => instagram_actor_id, # 503391023081924
@@ -112,10 +114,24 @@ module FacebookAds
 
       def messenger_sponsored_message(page_id:, messenger_sponsored_message:)
         {
-          object_id:                    page_id,
-          object_type:                  'SHARE',
-          messenger_sponsored_message:  messenger_sponsored_message.to_json
+          object_id: page_id,
+          object_type: 'SHARE',
+          messenger_sponsored_message: messenger_sponsored_message.to_json
         }
+      end
+
+      private
+
+      def degrees_of_freedom_spec(enroll_status)
+        return nil if enroll_status.nil?
+
+        {
+          'creative_features_spec' => {
+            'standard_enhancements' => {
+              'enroll_status' => enroll_status
+            }
+          }
+        }.to_json
       end
     end
   end
