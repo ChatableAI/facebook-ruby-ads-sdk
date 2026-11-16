@@ -190,7 +190,7 @@ module FacebookAds
           product_set_id: creative[:product_set_id]
         )
       else
-        AdCreative.carousel(creative)
+        AdCreative.carousel(**creative)
       end
 
       result = AdCreative.post("/#{id}/adcreatives", query: query)
@@ -205,7 +205,7 @@ module FacebookAds
       end
 
       raise Exception, "Creative call_to_action_type must be one of: #{AdCreative::CALL_TO_ACTION_TYPES.join(', ')}" unless AdCreative::CALL_TO_ACTION_TYPES.include?(creative[:call_to_action_type])
-      query = AdCreative.photo(creative)
+      query = AdCreative.photo(**creative)
       query[:access_token] = access_token if access_token
       result = AdCreative.post("/#{id}/adcreatives", query: query)
       AdCreative.find(result['id'], query: { access_token: access_token })
@@ -218,7 +218,7 @@ module FacebookAds
         raise Exception, "Creative is missing the following: #{keys.join(', ')}"
       end
 
-      query = AdCreative.link(creative)
+      query = AdCreative.link(**creative)
       query[:access_token] = access_token if access_token
       result = AdCreative.post("/#{id}/adcreatives", query: query)
       AdCreative.find(result['id'], query: { access_token: access_token })
@@ -231,7 +231,7 @@ module FacebookAds
         raise Exception, "Creative is missing the following: #{keys.join(', ')}"
       end
 
-      query = AdCreative.messenger_sponsored_message(creative)
+      query = AdCreative.messenger_sponsored_message(**creative)
       query[:access_token] = access_token if access_token
       result = AdCreative.post("/#{id}/adcreatives", query: query)
       AdCreative.find(result['id'], query: { access_token: access_token })
